@@ -1,3 +1,4 @@
+import java.util.Scanner;
 
 public class Quiz {
 	private Question[] questions;
@@ -23,10 +24,14 @@ public class Quiz {
 	}
 	
 	public void takeQuiz() {
+		Scanner reader = new Scanner(System.in);
 		for (int i=0; i<this.questions.length;i++) {
 			System.out.println(this.questions[i]); // prompt
 			// Here, the user will input
+			String userAnswer = reader.next();
+			// Error when invalid
 		}
+		reader.close();
 		return;
 	}
 	
