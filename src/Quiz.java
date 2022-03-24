@@ -21,4 +21,8 @@ public class Quiz {
 	public int getNumQuestions() {
 		return this.num_questions;
 	}
+	
+	public void takeQuiz() {
+		return;
+	}
 }
