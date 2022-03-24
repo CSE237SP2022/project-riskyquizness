@@ -23,6 +23,12 @@ public class Quiz {
 	}
 	
 	public void takeQuiz() {
+		for (int i=0; i<this.questions.length;i++) {
+			System.out.println(this.questions[i]); // prompt
+			// Here, the user will input
+		}
 		return;
 	}
+	
+	
 }
