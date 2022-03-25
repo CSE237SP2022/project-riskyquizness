@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Quiz {
@@ -29,7 +30,13 @@ public class Quiz {
 			System.out.println(this.questions[i]); // prompt
 			// Here, the user will input
 			String userAnswer = reader.next();
+			char firstChar = userAnswer.charAt(0);
 			// Error when invalid
+			while (userAnswer.length()!=1 || firstChar<65 || firstChar >= 65 + this.questions[i].getNumPossibleAnswers()) {
+				System.out.println("Please enter a valid input.");
+				userAnswer = reader.next();
+				firstChar = userAnswer.charAt(0);
+			}
 		}
 		reader.close();
 		return;
