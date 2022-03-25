@@ -1,5 +1,8 @@
+package quiz;
+
 import java.util.Arrays;
 import java.util.Scanner;
+
 
 public class Quiz {
 	private Question[] questions;
@@ -50,6 +53,5 @@ public class Quiz {
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
 	}
-	
 	
 }

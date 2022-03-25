@@ -1,3 +1,5 @@
+package quiz;
+
 public class Question {
 	
 	private String question;
@@ -12,8 +14,21 @@ public class Question {
 		this.correct_answer = correct_answer;
 	}
 	
-	public static boolean check_answer(char user_answer) {
-		return true;
+	public String get_question() {
+		return this.question;
+	}
+	
+
+	public String[] get_possible_answers() {
+		return this.possible_answers;
+	}
+	
+	public char get_correct_answer() {
+		return this.correct_answer;
+	}
+	
+	public boolean check_answer(char user_answer) {
+		return user_answer == this.correct_answer;
 	}
 	
 	public int getNumPossibleAnswers() {
