@@ -2,7 +2,7 @@ public class Question {
 	
 	private String question;
 	public String[] possible_answers;
-	private char correct_answer;
+	public char correct_answer;
 	
 	String[] alphabet = {"A","B","C","D","E"};
 	
@@ -18,6 +18,10 @@ public class Question {
 	
 	public int getNumPossibleAnswers() {
 		return this.possible_answers.length;
+	}
+	
+	public char getCorrectAnswer() {
+		return this.correct_answer;
 	}
 	
 	@Override

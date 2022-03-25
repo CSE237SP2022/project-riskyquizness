@@ -41,8 +41,13 @@ public class Quiz {
 				firstIntVal = firstChar;
 			}
 			// Now we have valid input
+			if (firstChar==this.questions[i].getCorrectAnswer()) {
+				score++;
+			}
 		}
 		reader.close();
+		double percentage = (double)score/this.num_questions * 100.0;
+		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
 	}
 	
