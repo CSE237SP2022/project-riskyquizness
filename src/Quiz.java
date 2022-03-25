@@ -25,20 +25,29 @@ public class Quiz {
 	}
 	
 	public void takeQuiz() {
+		int score = 0;
 		Scanner reader = new Scanner(System.in);
 		for (int i=0; i<this.questions.length;i++) {
 			System.out.println(this.questions[i]); // prompt
 			// Here, the user will input
 			String userAnswer = reader.next();
 			char firstChar = userAnswer.charAt(0);
+			int firstIntVal = firstChar;
 			// Error when invalid
-			while (userAnswer.length()!=1 || firstChar<65 || firstChar >= 65 + this.questions[i].getNumPossibleAnswers()) {
+			while (userAnswer.length()!=1 || firstIntVal<65 || firstIntVal >= 65 + this.questions[i].getNumPossibleAnswers()) {
 				System.out.println("Please enter a valid input.");
 				userAnswer = reader.next();
 				firstChar = userAnswer.charAt(0);
+				firstIntVal = firstChar;
+			}
+			// Now we have valid input
+			if (firstChar==this.questions[i].getCorrectAnswer()) {
+				score++;
 			}
 		}
 		reader.close();
+		double percentage = (double)score/this.num_questions * 100.0;
+		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
 	}
 	
