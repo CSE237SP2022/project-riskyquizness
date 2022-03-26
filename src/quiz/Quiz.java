@@ -9,10 +9,6 @@ public class Quiz {
 	private String quiz_name;
 	private int num_questions;
 	
-	public Quiz() {
-		
-	}
-	
 	public Quiz(Question[] questions, String quiz_name, int num_questions) {
 		this.questions = questions;
 		this.quiz_name = quiz_name;
@@ -32,37 +28,62 @@ public class Quiz {
 	}
 	
 	public static void main(String[] args) {
-		Quiz new_quiz = new Quiz();
+		Quiz quiz = createQuiz();
+		
 	}
 	
-	public void createQuiz() {
+	public static Quiz createQuiz() {
 		Scanner reader = new Scanner(System.in);
 		System.out.println("What is the name of the quiz?");
-		this.quiz_name = reader.next();
-		System.out.println("How many questions are in your quiz?");
-		this.num_questions = Integer.parseInt(reader.next());
+		String quiz_name = reader.nextLine();
 		
-		this.questions = new Question[this.num_questions];
-		for (int i = 0; i < this.num_questions; i++) {
-			this.questions[i] = addQuestion(i, reader);
+		System.out.println("How many questions are in your quiz?");
+		int num_questions = Integer.parseInt(reader.nextLine());
+		
+		Question[] quiz_questions = new Question[num_questions];
+		for (int i = 0; i < num_questions; i++) {
+			quiz_questions[i] = addQuestion(i, reader);
 		}
 		
+		Quiz new_quiz = new Quiz(quiz_questions, quiz_name, num_questions);
+		
+		return new_quiz;
 	}
 	
-	public Question addQuestion(int num, Scanner reader) {
-		System.out.println("Question " + num);
-		String question = reader.next();
+	public static Question addQuestion(int num, Scanner reader) {
+		System.out.println("Question " + (num + 1));
+		String question = reader.nextLine();
+		
 		System.out.println("How many possible answers are there?");
-		int num_possible = Integer.parseInt(reader.next());
+		int num_possible = Integer.parseInt(reader.nextLine());
+		
 		String[] possible_answers = new String[num_possible];
 		for (int i = 0; i < num_possible; i++) {
-			System.out.println("Answer Choice " + i);
-			String answer_choice = reader.next();
+			System.out.println("Answer Choice " + (i + 1));
+			String answer_choice = reader.nextLine();
 			possible_answers[i] = answer_choice;
 		}
-		System.out.println("What is the correct answer?");
-		char correct = reader.next().charAt(0);
-		Question current_question = new Question(question, possible_answers, correct);
+		
+		Question current_question = new Question(question, possible_answers);
+		
+		while (current_question.correct_answer == ' ') {
+			System.out.println("What is the correct answer?");
+			System.out.println(current_question.possibleAnswersToString());
+			
+			String inputted_correct_answer = reader.nextLine();
+			if (inputted_correct_answer.length() == 1) {
+				if (Character.isLetter(inputted_correct_answer.charAt(0))) {
+					current_question.correct_answer = Character.toUpperCase(inputted_correct_answer.charAt(0));
+				}
+				else {
+					invalidInput();
+				}
+			}
+			else{
+				invalidInput();
+			}
+		}
+		
 		return current_question;
 	}
 	
@@ -72,13 +93,13 @@ public class Quiz {
 		for (int i=0; i<this.questions.length;i++) {
 			System.out.println(this.questions[i]); // prompt
 			// Here, the user will input
-			String userAnswer = reader.next();
+			String userAnswer = reader.nextLine();
 			char firstChar = userAnswer.charAt(0);
 			int firstIntVal = firstChar;
 			// Error when invalid
 			while (userAnswer.length()!=1 || firstIntVal<65 || firstIntVal >= 65 + this.questions[i].getNumPossibleAnswers()) {
 				System.out.println("Please enter a valid input.");
-				userAnswer = reader.next();
+				userAnswer = reader.nextLine();
 				firstChar = userAnswer.charAt(0);
 				firstIntVal = firstChar;
 			}
@@ -91,6 +112,10 @@ public class Quiz {
 		double percentage = (double)score/this.num_questions * 100.0;
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
+	}
+	
+	public static void invalidInput() {
+		System.out.print("Invalid input. ");
 	}
 	
 	
