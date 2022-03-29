@@ -1,10 +1,10 @@
-What user stories were completed this iteration?
+## What user stories were completed this iteration?
 We completed the basic foundational user stories of making and taking a quiz.
 Within these stories, users can select whether they would like to create or take a quiz,
 create a quiz with personalized questions and answer choices at any length of choice, and take a quiz and receive a score based on accuracy at the end.
 We completed issues #6-#18 on our Github project management board, which reflect a more detailed description of our work.
 
-What user stories do you intend to complete next iteration?
+## What user stories do you intend to complete next iteration?
 While we are still developing what we would like to focus on in creating in our next iteration, we have come up with a few new features we would like to
 work on in the next iteration or the final iteration.
 For example:
@@ -15,9 +15,9 @@ For example:
 - An option to exit or close out the program after using it
 These functions will significantly contribute to the user experience.
 
-Is there anything that you implemented but doesn't currently work?
+## Is there anything that you implemented but doesn't currently work?
 We have some instances of invalid input cases that have not been handled, such as if a user types in a letter instead of a number when asked for
 number of questions in the quiz.
 
-What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
+## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
 A bash script is provided. Run ./script.sh
