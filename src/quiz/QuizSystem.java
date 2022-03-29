@@ -38,8 +38,30 @@ public class QuizSystem {
 		System.out.print("Invalid input. ");
 	}
 	
-	// TODO: create quiz or take quiz options
+	public void take_quiz_selection(int quiz_num) {
+		this.quizzes.get(quiz_num-1).takeQuiz();
+	}
 	
+	// TODO: create quiz or take quiz options
+	public void quiz_selection(Scanner reader) {
+		System.out.println("Would you like to create or take a quiz? (type 'create' or 'take')");
+		String user_selection  = reader.nextLine();
+		if (user_selection.equals("create")) {
+			createQuiz(reader);
+		}
+		else if (user_selection.equals("take")) {
+			for (int i = 0; i < this.quizzes.size(); i++) {
+				System.out.println((i+1) + " " + this.quizzes.get(i).getQuizName());
+			}
+			System.out.println("Which quiz would you like to take? Please input the number.");
+			int quiz_num = Integer.parseInt(reader.nextLine());
+			take_quiz_selection(quiz_num);
+		}
+		else {
+			invalidInput();
+		}
+		
+	}
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -47,9 +69,10 @@ public class QuizSystem {
 		Scanner reader = new Scanner(System.in);
 		QuizSystem quiz_list = new QuizSystem();
 		
-		quiz_list.createQuiz(reader);
-		
-		quiz_list.quizzes.get(0).takeQuiz();
+		while (true) {
+			quiz_list.quiz_selection(reader);
+		}
+
 	}
 
 }

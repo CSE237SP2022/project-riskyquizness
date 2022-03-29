@@ -99,7 +99,7 @@ public class Quiz {
 		Scanner reader = new Scanner(System.in);
 		
 		for (int i=0; i<questions.size(); i++) {
-			System.out.println(questions.get(i).get_question()); // prompt
+			System.out.println(questions.get(i)); // prompt
 			// Here, the user will input
 			String userAnswer = reader.nextLine();
 			char firstChar = userAnswer.charAt(0);
