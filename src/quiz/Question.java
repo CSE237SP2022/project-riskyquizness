@@ -8,6 +8,12 @@ public class Question {
 	
 	String[] alphabet = {"A","B","C","D","E"};
 	
+	public Question(String question, String[] possible_answers) {
+		this.question = question;
+		this.possible_answers = possible_answers;
+		this.correct_answer = ' ';
+	}
+	
 	public Question(String question, String[] possible_answers, char correct_answer) {
 		this.question = question;
 		this.possible_answers = possible_answers;
@@ -39,15 +45,20 @@ public class Question {
 		return this.correct_answer;
 	}
 	
+	public String possibleAnswersToString() {
+		String output = "";
+		for (int i=0; i<this.possible_answers.length;i++) {
+	    	output += alphabet[i] + " " + this.possible_answers[i] + "\n";
+	    }
+		return output;
+	}
 	@Override
 	public String toString() {
 		if (this.possible_answers.length>5) {
 			return "Error";
 		}
 		String output = this.question;
-	    for (int i=0; i<this.possible_answers.length;i++) {
-	    	output += "\n"+ alphabet[i] + " " + this.possible_answers[i];
-	    }
+		output += "\n" + possibleAnswersToString();
 	    return output;
 	}
 	
