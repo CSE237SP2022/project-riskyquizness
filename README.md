@@ -1,3 +1,6 @@
+# Risky Quizness Iteration 1
+by Christina Cai, Guenevere Chang, Jiwon Choi, and Katherine Zhou
+
 ## What user stories were completed this iteration?
 We completed the basic foundational user stories of making and taking a quiz.
 Within these stories, users can select whether they would like to create or take a quiz,
