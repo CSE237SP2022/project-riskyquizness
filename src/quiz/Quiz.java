@@ -41,7 +41,20 @@ public class Quiz {
 	public void setNumQuestions(int num_questions) {
 		this.num_questions = num_questions;
 	}
+	
+	public void preview_quiz() {
+		System.out.println("\n____________________________");
+
+		System.out.println("Preview Quiz\n");
 		
+		System.out.println("Quiz Name: " + getQuizName());
+		for (Question question: this.questions) {
+			System.out.println(question.toString());
+		}
+		System.out.println("____________________________\n");
+
+	}
+	
 	public void addQuestion(int num, Scanner reader) {
 		System.out.println("Question " + (num + 1));
 		String question = reader.nextLine();
@@ -83,10 +96,11 @@ public class Quiz {
 			}
 		}
 		
-		this.questions.add(current_question);
 		if (this.questions.size() == this.num_questions) {
 			this.num_questions++;
 		}
+
+		this.questions.add(current_question);
 
 	}
 	
@@ -94,9 +108,9 @@ public class Quiz {
         return str != null && str.matches("[-+]?\\d*\\.?\\d+");
     }
 	
-	public void takeQuiz() {
+	public void takeQuiz(Scanner reader) {
 		int score = 0;
-		Scanner reader = new Scanner(System.in);
+//		Scanner reader = new Scanner(System.in);
 		
 		for (int i=0; i<questions.size(); i++) {
 			System.out.println(questions.get(i)); // prompt
@@ -116,7 +130,7 @@ public class Quiz {
 				score++;
 			}
 		}
-		reader.close();
+		
 		double percentage = (double)score/this.num_questions * 100.0;
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
