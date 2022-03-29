@@ -242,4 +242,32 @@ class QuizTest {
 		
 		assertTrue(expectedOutput.equals(display));
 	}
+	
+	@Test
+	void testUserGrading() {
+		String prompt = "Favorite color?";
+		String[] possible_answers = {"blue", "green", "red"};
+		char correct_answer = 'B';
+		Question question1 = new Question(prompt, possible_answers, correct_answer);
+		
+		String prompt2 = "Favorite food?";
+		String[] possible_answers2 = {"orange", "rice", "bread"};
+		char correct_answer2 = 'A';
+		Question question2 = new Question(prompt2, possible_answers2, correct_answer2);
+		
+		ArrayList<Question> questions = new ArrayList<Question>();
+		questions.add(question1);
+		questions.add(question2);
+		String quiz_name = "TestQuiz";
+		int num_questions = 2;
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
+		
+		String userInput = "A"+"\nA";
+		quiz.takeQuiz(new Scanner(userInput));
+		
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nYou got 50.0% of this quiz correct.";
+		String display = outputStreamCaptor.toString().trim();
+		
+		assertTrue(expectedOutput.equals(display));
+	}
 }
