@@ -1,16 +1,27 @@
 package test;
 
 import quiz.QuizSystem;
+import quiz.Question;
 import quiz.Quiz;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class QuizTest {
 
+	private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+
+	@BeforeEach
+	public void setUp() {
+	    System.setOut(new PrintStream(outputStreamCaptor));
+	}
 	
 	@Test
 	void check_set_quiz_name() {
@@ -118,6 +129,34 @@ class QuizTest {
 		quiz.addQuestion(0, new Scanner(user_inputs_add_question));
 			
 		assertEquals(2, quiz.questions.size());
+	}
+	
+	@Test
+	void testUserInput() {
+		String prompt = "Favorite color?";
+		String[] possible_answers = {"blue", "green", "red"};
+		char correct_answer = 'B';
+		Question question1 = new Question(prompt, possible_answers, correct_answer);
+		
+		String prompt2 = "Favorite food?";
+		String[] possible_answers2 = {"orange", "rice", "bread"};
+		char correct_answer2 = 'A';
+		Question question2 = new Question(prompt2, possible_answers2, correct_answer2);
+		
+		ArrayList<Question> questions = new ArrayList<Question>();
+		questions.add(question1);
+		questions.add(question2);
+		String quiz_name = "TestQuiz";
+		int num_questions = 2;
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
+		
+		String userInput = "B"+"\nA";
+		quiz.takeQuiz(new Scanner(userInput));
+		
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nYou got 100.0% of this quiz correct.";
+		String display = outputStreamCaptor.toString().trim();
+		
+		assertTrue(expectedOutput.equals(display));
 	}
 	
 }
