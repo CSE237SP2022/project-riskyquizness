@@ -21,6 +21,9 @@ public class QuizSystem {
 		System.out.println("How many questions are in your quiz?");
 		int num_questions = Integer.parseInt(reader.nextLine());
 		//TODO: check for invalid inputs
+		if (num_questions == 0) {
+			invalidInput();
+		}
 		new_quiz.setNumQuestions(num_questions);
 		
 		for (int i = 0; i < num_questions; i++) {
@@ -29,6 +32,10 @@ public class QuizSystem {
 		
 		this.quizzes.add(new_quiz);
 						
+	}
+	
+	public static void invalidInput() {
+		System.out.print("Invalid input. ");
 	}
 	
 	// TODO: create quiz or take quiz options
