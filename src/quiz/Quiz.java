@@ -68,11 +68,17 @@ public class Quiz {
 				if (Character.isLetter(inputted_correct_answer.charAt(0))) {
 					current_question.correct_answer = Character.toUpperCase(inputted_correct_answer.charAt(0));
 				}
+				else if (isNumeric(inputted_correct_answer)) {
+					invalidInput();
+				}
 				else {
 					invalidInput();
 				}
 			}
-			else{
+			else if (inputted_correct_answer.isEmpty()){
+				invalidInput();
+			}
+			else {
 				invalidInput();
 			}
 		}
@@ -83,6 +89,10 @@ public class Quiz {
 		}
 
 	}
+	
+	public static boolean isNumeric(String str) {
+        return str != null && str.matches("[-+]?\\d*\\.?\\d+");
+    }
 	
 	public void takeQuiz() {
 		int score = 0;
