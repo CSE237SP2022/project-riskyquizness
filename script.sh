@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cd src/quiz
-javac Question.java
-javac Quiz.java
-javac QuizSystem.java
+cd src
+javac quiz/Question.java
+javac quiz/Quiz.java
+javac quiz/QuizSystem.java
 
-java QuizSystem
+java quiz/QuizSystem
