@@ -31,15 +31,17 @@ public class QuizSystem {
 		}
 		
 		this.quizzes.add(new_quiz);
-						
+		
+		new_quiz.preview_quiz();
+
 	}
 	
 	public static void invalidInput() {
 		System.out.print("Invalid input. ");
 	}
 	
-	public void take_quiz_selection(int quiz_num) {
-		this.quizzes.get(quiz_num-1).takeQuiz();
+	public void take_quiz_selection(int quiz_num, Scanner reader) {
+		this.quizzes.get(quiz_num-1).takeQuiz(reader);
 	}
 	
 	// TODO: create quiz or take quiz options
@@ -55,7 +57,7 @@ public class QuizSystem {
 			}
 			System.out.println("Which quiz would you like to take? Please input the number.");
 			int quiz_num = Integer.parseInt(reader.nextLine());
-			take_quiz_selection(quiz_num);
+			take_quiz_selection(quiz_num, reader);
 		}
 		else {
 			invalidInput();
