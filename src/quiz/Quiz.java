@@ -1,21 +1,28 @@
 package quiz;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 
 public class Quiz {
-	private Question[] questions;
+	public ArrayList<Question> questions;
 	private String quiz_name;
 	private int num_questions;
 	
-	public Quiz(Question[] questions, String quiz_name, int num_questions) {
+	public Quiz() {
+		this.questions = new ArrayList<Question>();
+		this.quiz_name = "";
+		this.num_questions = 0;
+	}
+	
+	public Quiz(ArrayList<Question> questions, String quiz_name, int num_questions) {
 		this.questions = questions;
 		this.quiz_name = quiz_name;
 		this.num_questions = num_questions;
 	}
 	
-	public Question[] getQuestions() {
+	public ArrayList<Question> getQuestions() {
 		return this.questions;
 	}
 	
@@ -27,30 +34,15 @@ public class Quiz {
 		return this.num_questions;
 	}
 	
-	public static void main(String[] args) {
-		Quiz quiz = createQuiz();
-		
+	public void setQuizName(String quiz_name) {
+		this.quiz_name = quiz_name;
 	}
 	
-	public static Quiz createQuiz() {
-		Scanner reader = new Scanner(System.in);
-		System.out.println("What is the name of the quiz?");
-		String quiz_name = reader.nextLine();
-		
-		System.out.println("How many questions are in your quiz?");
-		int num_questions = Integer.parseInt(reader.nextLine());
-		
-		Question[] quiz_questions = new Question[num_questions];
-		for (int i = 0; i < num_questions; i++) {
-			quiz_questions[i] = addQuestion(i, reader);
-		}
-		
-		Quiz new_quiz = new Quiz(quiz_questions, quiz_name, num_questions);
-		
-		return new_quiz;
+	public void setNumQuestions(int num_questions) {
+		this.num_questions = num_questions;
 	}
-	
-	public static Question addQuestion(int num, Scanner reader) {
+		
+	public void addQuestion(int num, Scanner reader) {
 		System.out.println("Question " + (num + 1));
 		String question = reader.nextLine();
 		
@@ -66,6 +58,7 @@ public class Quiz {
 		
 		Question current_question = new Question(question, possible_answers);
 		
+		// TODO: complete check for invalid input 
 		while (current_question.correct_answer == ' ') {
 			System.out.println("What is the correct answer?");
 			System.out.println(current_question.possibleAnswersToString());
@@ -84,27 +77,32 @@ public class Quiz {
 			}
 		}
 		
-		return current_question;
+		this.questions.add(current_question);
+		if (this.questions.size() == this.num_questions) {
+			this.num_questions++;
+		}
+
 	}
 	
 	public void takeQuiz() {
 		int score = 0;
 		Scanner reader = new Scanner(System.in);
-		for (int i=0; i<this.questions.length;i++) {
-			System.out.println(this.questions[i]); // prompt
+		
+		for (int i=0; i<questions.size(); i++) {
+			System.out.println(questions.get(i).get_question()); // prompt
 			// Here, the user will input
 			String userAnswer = reader.nextLine();
 			char firstChar = userAnswer.charAt(0);
 			int firstIntVal = firstChar;
 			// Error when invalid
-			while (userAnswer.length()!=1 || firstIntVal<65 || firstIntVal >= 65 + this.questions[i].getNumPossibleAnswers()) {
+			while (userAnswer.length()!=1 || firstIntVal<65 || firstIntVal >= 65 + questions.get(i).getNumPossibleAnswers()) {
 				System.out.println("Please enter a valid input.");
 				userAnswer = reader.nextLine();
 				firstChar = userAnswer.charAt(0);
 				firstIntVal = firstChar;
 			}
 			// Now we have valid input
-			if (firstChar==this.questions[i].getCorrectAnswer()) {
+			if (firstChar==questions.get(i).getCorrectAnswer()) {
 				score++;
 			}
 		}
