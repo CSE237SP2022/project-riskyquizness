@@ -3,6 +3,7 @@ package quiz;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import quiz.QuizSystem;
 
 
 public class Quiz {
@@ -55,54 +56,69 @@ public class Quiz {
 
 	}
 	
-	public void addQuestion(int num, Scanner reader) {
-		System.out.println("Question " + (num + 1));
-		String question = reader.nextLine();
-		
-		System.out.println("How many possible answers are there?");
-		int num_possible = Integer.parseInt(reader.nextLine());
-		
-		String[] possible_answers = new String[num_possible];
-		for (int i = 0; i < num_possible; i++) {
-			System.out.println("Answer Choice " + (i + 1));
-			String answer_choice = reader.nextLine();
-			possible_answers[i] = answer_choice;
-		}
-		
-		Question current_question = new Question(question, possible_answers);
-		
-		// TODO: complete check for invalid input 
-		while (current_question.correct_answer == ' ') {
-			System.out.println("What is the correct answer?");
-			System.out.println(current_question.possibleAnswersToString());
+	public void addQuestion(int num_questions, Scanner reader) {
+		for (int i = 0; i < num_questions; i++) {
+			System.out.println("Question " + (i + 1));
+			String question = reader.nextLine();
+			if (QuizSystem.cancel_quiz(question)) {
+				return;
+			}
 			
-			String inputted_correct_answer = reader.nextLine();
-			if (inputted_correct_answer.length() == 1) {
-				if (Character.isLetter(inputted_correct_answer.charAt(0))) {
-					current_question.correct_answer = Character.toUpperCase(inputted_correct_answer.charAt(0));
+			System.out.println("How many possible answers are there?");
+			String num_possible_string = reader.nextLine();
+			if (QuizSystem.cancel_quiz(num_possible_string)) {
+				return;
+			}
+			int num_possible = Integer.parseInt(num_possible_string);
+			
+			String[] possible_answers = new String[num_possible];
+			for (int j = 0; j < num_possible; j++) {
+				System.out.println("Answer Choice " + (j + 1));
+				String answer_choice = reader.nextLine();
+				if (QuizSystem.cancel_quiz(answer_choice)) {
+					return;
 				}
-				else if (isNumeric(inputted_correct_answer)) {
+				possible_answers[i] = answer_choice;
+			}
+			
+			Question current_question = new Question(question, possible_answers);
+			
+			// TODO: complete check for invalid input 
+			while (current_question.correct_answer == ' ') {
+				System.out.println("What is the correct answer?");
+				System.out.println(current_question.possibleAnswersToString());
+				
+				String inputted_correct_answer = reader.nextLine();
+				if (QuizSystem.cancel_quiz(inputted_correct_answer)) {
+					return;
+				}
+				if (inputted_correct_answer.length() == 1) {
+					if (Character.isLetter(inputted_correct_answer.charAt(0))) {
+						current_question.correct_answer = Character.toUpperCase(inputted_correct_answer.charAt(0));
+					}
+					else if (isNumeric(inputted_correct_answer)) {
+						invalidInput();
+					}
+					else {
+						invalidInput();
+					}
+				}
+				else if (inputted_correct_answer.isEmpty()){
 					invalidInput();
 				}
 				else {
 					invalidInput();
 				}
 			}
-			else if (inputted_correct_answer.isEmpty()){
-				invalidInput();
+			
+			if (this.questions.size() == this.num_questions) {
+				this.num_questions++;
 			}
-			else {
-				invalidInput();
-			}
+	
+			this.questions.add(current_question);
 		}
-		
-		if (this.questions.size() == this.num_questions) {
-			this.num_questions++;
-		}
-
-		this.questions.add(current_question);
-
 	}
+	
 	
 	public static boolean isNumeric(String str) {
         return str != null && str.matches("[-+]?\\d*\\.?\\d+");

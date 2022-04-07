@@ -16,24 +16,28 @@ public class QuizSystem {
 		
 		System.out.println("What is the name of the quiz?");
 		String quiz_name = reader.nextLine();
+		if (cancel_quiz(quiz_name)) {
+			return;
+		}
 		new_quiz.setQuizName(quiz_name);
 		
 		System.out.println("How many questions are in your quiz?");
-		int num_questions = Integer.parseInt(reader.nextLine());
+		String num_questions_string = reader.nextLine();
+		if (cancel_quiz(num_questions_string)) {
+			return;
+		}
+		int num_questions = Integer.parseInt(num_questions_string);
 		//TODO: check for invalid inputs
 		if (num_questions == 0) {
 			invalidInput();
 		}
 		new_quiz.setNumQuestions(num_questions);
 		
-		for (int i = 0; i < num_questions; i++) {
-			new_quiz.addQuestion(i, reader);
-		}
+		new_quiz.addQuestion(num_questions, reader);
+		
 		
 		this.quizzes.add(new_quiz);
-		
-		new_quiz.preview_quiz();
-
+						
 	}
 	
 	public static void invalidInput() {
@@ -63,6 +67,17 @@ public class QuizSystem {
 			invalidInput();
 		}
 		
+	}
+	
+	public static boolean cancel_quiz(String input) {
+		if (input.equals("cancel")) {
+			System.out.println("Quiz Creation Cancelled");
+			System.out.println("____________________________");
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public static void main(String[] args) {
