@@ -3,7 +3,7 @@ package quiz;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import quiz.QuizSystem;
+import quiz.QuizSystem.Types;
 
 
 public class Quiz {
@@ -35,15 +35,24 @@ public class Quiz {
 		return this.num_questions;
 	}
 	
-	public void setQuizName(String quiz_name) {
-		this.quiz_name = quiz_name;
+	public boolean setQuizName(String quiz_name) {
+		if (!quiz_name.equals("CANCEL")) {
+			this.quiz_name = quiz_name;
+			return true;
+		}	
+		return false;
+		
 	}
 	
-	public void setNumQuestions(int num_questions) {
-		this.num_questions = num_questions;
+	public boolean setNumQuestions(String num_questions) {
+		if (!num_questions.equals("CANCEL")) {
+			this.num_questions = Integer.parseInt(num_questions);
+			return true;
+		}
+		return false;
 	}
 	
-	public void preview_quiz() {
+	public void previewQuiz() {
 		System.out.println("\n____________________________");
 
 		System.out.println("Preview Quiz\n");
@@ -56,29 +65,27 @@ public class Quiz {
 
 	}
 	
-	public void addQuestion(int num_questions, Scanner reader) {
+	public boolean addQuestion(int num_questions, Scanner reader) {
 		for (int i = 0; i < num_questions; i++) {
-			System.out.println("Question " + (i + 1));
-			String question = reader.nextLine();
-			if (QuizSystem.cancel_quiz(question)) {
-				return;
+
+			String question = QuizSystem.questionAndReadInput("Question " + (i + 1), reader, Types.STRING);
+			if (question.equals("CANCEL")) {
+				return false;
 			}
 			
-			System.out.println("How many possible answers are there?");
-			String num_possible_string = reader.nextLine();
-			if (QuizSystem.cancel_quiz(num_possible_string)) {
-				return;
+			String num_possible_string = QuizSystem.questionAndReadInput("How many possible answers are there?", reader, Types.INT);
+			if (num_possible_string.equals("CANCEL")) {
+				break;
 			}
 			int num_possible = Integer.parseInt(num_possible_string);
 			
 			String[] possible_answers = new String[num_possible];
 			for (int j = 0; j < num_possible; j++) {
-				System.out.println("Answer Choice " + (j + 1));
-				String answer_choice = reader.nextLine();
-				if (QuizSystem.cancel_quiz(answer_choice)) {
-					return;
+				String answer_choice = QuizSystem.questionAndReadInput("Answer Choice " + (j + 1), reader, Types.STRING);
+				if (answer_choice.equals("CANCEL")) {
+					return false;
 				}
-				possible_answers[i] = answer_choice;
+				possible_answers[j] = answer_choice;
 			}
 			
 			Question current_question = new Question(question, possible_answers);
@@ -89,9 +96,9 @@ public class Quiz {
 				System.out.println(current_question.possibleAnswersToString());
 				
 				String inputted_correct_answer = reader.nextLine();
-				if (QuizSystem.cancel_quiz(inputted_correct_answer)) {
-					return;
-				}
+//				if (QuizSystem.cancel_quiz(inputted_correct_answer)) {
+//					return;
+//				}
 				if (inputted_correct_answer.length() == 1) {
 					if (Character.isLetter(inputted_correct_answer.charAt(0))) {
 						current_question.correct_answer = Character.toUpperCase(inputted_correct_answer.charAt(0));
@@ -117,6 +124,7 @@ public class Quiz {
 	
 			this.questions.add(current_question);
 		}
+		return true;
 	}
 	
 	
@@ -126,12 +134,11 @@ public class Quiz {
 	
 	public void takeQuiz(Scanner reader) {
 		int score = 0;
-//		Scanner reader = new Scanner(System.in);
 		
 		for (int i=0; i<questions.size(); i++) {
-			System.out.println(questions.get(i)); // prompt
+			
 			// Here, the user will input
-			String userAnswer = reader.nextLine();
+			String userAnswer = QuizSystem.questionAndReadInput(questions.get(i).toString(), reader, Types.CHAR);
 			char firstChar = userAnswer.charAt(0);
 			int firstIntVal = firstChar;
 			// Error when invalid
