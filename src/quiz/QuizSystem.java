@@ -5,6 +5,12 @@ import java.util.Scanner;
 
 public class QuizSystem {
 	
+	enum Types {
+		INT,
+		STRING,
+		CHAR
+	}
+	
 	public ArrayList<Quiz> quizzes;
 	
 	public QuizSystem() {
@@ -14,70 +20,77 @@ public class QuizSystem {
 	public void createQuiz(Scanner reader) {
 		Quiz new_quiz = new Quiz();
 		
-		System.out.println("What is the name of the quiz?");
-		String quiz_name = reader.nextLine();
-		if (cancel_quiz(quiz_name)) {
+		String quiz_name = questionAndReadInput("What is the name of the quiz?", reader, Types.STRING);
+		if (!new_quiz.setQuizName(quiz_name)){
 			return;
 		}
-		new_quiz.setQuizName(quiz_name);
 		
-		System.out.println("How many questions are in your quiz?");
-		String num_questions_string = reader.nextLine();
-		if (cancel_quiz(num_questions_string)) {
+		String num_questions_string = questionAndReadInput("How many questions are in your quiz?", reader, Types.INT);
+		if (!new_quiz.setNumQuestions(num_questions_string)) {
 			return;
 		}
-		int num_questions = Integer.parseInt(num_questions_string);
-		//TODO: check for invalid inputs
-		if (num_questions == 0) {
-			invalidInput();
+		
+		if (!new_quiz.addQuestion(new_quiz.getNumQuestions(), reader)) {
+			return;	
 		}
-		new_quiz.setNumQuestions(num_questions);
-		
-		new_quiz.addQuestion(num_questions, reader);
-		
 		
 		this.quizzes.add(new_quiz);
+		this.quizzes.get(this.quizzes.size()-1).previewQuiz();
 						
+	}
+	
+	public static String questionAndReadInput(String question, Scanner reader, Types t) {
+		System.out.println(question);
+		String response = reader.nextLine();
+		
+		if (response.toUpperCase().equals("CANCEL")) {
+			cancelQuiz();
+			return "CANCEL";
+		}
+		else {
+		// check validity
+//			if (num_questions == 0) {
+//			invalidInput();
+//		}
+			return response;
+		} 
+	}
+	
+	
+	public void takeQuizSelection(int quizNum, Scanner reader) {
+		this.quizzes.get(quizNum-1).takeQuiz(reader);
+	}
+	
+	public void quizSelection(Scanner reader) {
+		String user_selection  = questionAndReadInput("Would you like to create or take a quiz? (type 'create' or 'take')", reader, Types.STRING);
+		
+		if (user_selection.toLowerCase().equals("create")) {
+			createQuiz(reader);
+		}
+		else if (user_selection.toLowerCase().equals("take")) {
+			displayQuizzes();
+			int quiz_num = Integer.parseInt(questionAndReadInput("Which quiz would you like to take? Please input the number.", reader, Types.INT));
+			takeQuizSelection(quiz_num, reader);
+		}
+		else {
+			invalidInput();
+		}
+		
+	}
+	
+	public void displayQuizzes() {
+		for (int i = 0; i < this.quizzes.size(); i++) {
+			System.out.println((i+1) + " " + this.quizzes.get(i).getQuizName());
+		}
 	}
 	
 	public static void invalidInput() {
 		System.out.print("Invalid input. ");
 	}
 	
-	public void take_quiz_selection(int quiz_num, Scanner reader) {
-		this.quizzes.get(quiz_num-1).takeQuiz(reader);
-	}
-	
-	// TODO: create quiz or take quiz options
-	public void quiz_selection(Scanner reader) {
-		System.out.println("Would you like to create or take a quiz? (type 'create' or 'take')");
-		String user_selection  = reader.nextLine();
-		if (user_selection.equals("create")) {
-			createQuiz(reader);
-		}
-		else if (user_selection.equals("take")) {
-			for (int i = 0; i < this.quizzes.size(); i++) {
-				System.out.println((i+1) + " " + this.quizzes.get(i).getQuizName());
-			}
-			System.out.println("Which quiz would you like to take? Please input the number.");
-			int quiz_num = Integer.parseInt(reader.nextLine());
-			take_quiz_selection(quiz_num, reader);
-		}
-		else {
-			invalidInput();
-		}
-		
-	}
-	
-	public static boolean cancel_quiz(String input) {
-		if (input.equals("cancel")) {
-			System.out.println("Quiz Creation Cancelled");
-			System.out.println("____________________________");
-			return true;
-		}
-		else {
-			return false;
-		}
+	public static void cancelQuiz() {
+		System.out.println("\nQuiz Creation Cancelled");
+		System.out.println("____________________________");
 	}
 	
 	public static void main(String[] args) {
@@ -87,7 +100,7 @@ public class QuizSystem {
 		QuizSystem quiz_list = new QuizSystem();
 		
 		while (true) {
-			quiz_list.quiz_selection(reader);
+			quiz_list.quizSelection(reader);
 		}
 
 	}

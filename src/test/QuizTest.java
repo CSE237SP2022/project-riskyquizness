@@ -37,12 +37,12 @@ class QuizTest {
 	@Test
 	void check_set_num_questions() {
 		Quiz quiz = new Quiz();
-		int num_questions = 3;
+		String num_questions = "3";
 		
 		quiz.setNumQuestions(num_questions);
 		int check_num = quiz.getNumQuestions();
 		
-		assertEquals(check_num, num_questions);
+		assertEquals(check_num, 3);
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ class QuizTest {
 											+ "Los Angeles\n"
 											+ "A\n";
 		
-		quiz.addQuestion(0, new Scanner(user_inputs_add_question));
+		quiz.addQuestion(1, new Scanner(user_inputs_add_question));
 			
 		assertEquals(2, quiz.questions.size());
 	}
