@@ -41,7 +41,6 @@ public class Quiz {
 			return true;
 		}	
 		return false;
-		
 	}
 	
 	public boolean setNumQuestions(String num_questions) {
@@ -67,7 +66,6 @@ public class Quiz {
 	
 	public boolean addQuestion(int num_questions, Scanner reader) {
 		for (int i = 0; i < num_questions; i++) {
-
 			String question = QuizSystem.questionAndReadInput("Question " + (i + 1), reader, Types.STRING);
 			if (question.equals("CANCEL")) {
 				return false;
@@ -90,33 +88,9 @@ public class Quiz {
 			
 			Question current_question = new Question(question, possible_answers);
 			
-			// TODO: complete check for invalid input 
-			while (current_question.correct_answer == ' ') {
-				System.out.println("What is the correct answer?");
-				System.out.println(current_question.possibleAnswersToString());
-				
-				String inputted_correct_answer = reader.nextLine();
-//				if (QuizSystem.cancel_quiz(inputted_correct_answer)) {
-//					return;
-//				}
-				if (inputted_correct_answer.length() == 1) {
-					if (Character.isLetter(inputted_correct_answer.charAt(0))) {
-						current_question.correct_answer = Character.toUpperCase(inputted_correct_answer.charAt(0));
-					}
-					else if (isNumeric(inputted_correct_answer)) {
-						invalidInput();
-					}
-					else {
-						invalidInput();
-					}
-				}
-				else if (inputted_correct_answer.isEmpty()){
-					invalidInput();
-				}
-				else {
-					invalidInput();
-				}
-			}
+			String prompt = "What is the correct answer?\n" + current_question.possibleAnswersToString();
+			String inputted_correct_answer = QuizSystem.questionAndReadInput(prompt, reader, Types.CHAR, num_possible);
+			current_question.correct_answer = inputted_correct_answer.charAt(0);
 			
 			if (this.questions.size() == this.num_questions) {
 				this.num_questions++;
@@ -136,18 +110,10 @@ public class Quiz {
 		int score = 0;
 		
 		for (int i=0; i<questions.size(); i++) {
-			
 			// Here, the user will input
-			String userAnswer = QuizSystem.questionAndReadInput(questions.get(i).toString(), reader, Types.CHAR);
+			String userAnswer = QuizSystem.questionAndReadInput(questions.get(i).toString(), reader, Types.CHAR, questions.get(i).getNumPossibleAnswers());
 			char firstChar = userAnswer.charAt(0);
-			int firstIntVal = firstChar;
-			// Error when invalid
-			while (userAnswer.length()!=1 || firstIntVal<65 || firstIntVal >= 65 + questions.get(i).getNumPossibleAnswers()) {
-				System.out.println("Please enter a valid input.");
-				userAnswer = reader.nextLine();
-				firstChar = userAnswer.charAt(0);
-				firstIntVal = firstChar;
-			}
+
 			// Now we have valid input
 			if (firstChar==questions.get(i).getCorrectAnswer()) {
 				score++;
@@ -158,10 +124,5 @@ public class Quiz {
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
 	}
-	
-	public static void invalidInput() {
-		System.out.print("Invalid input. ");
-	}
-	
 	
 }
