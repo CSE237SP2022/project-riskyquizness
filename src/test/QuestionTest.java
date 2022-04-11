@@ -55,7 +55,7 @@ class QuestionTest {
 		
 		Question question1 = new Question(question, possible_answers, correct_answer);
 		String display = question1.toString();
-		String expected = "Favorite color?\nA blue\nB green\nC red";
+		String expected = "Favorite color?\nA blue\nB green\nC red\n";
 		assertTrue(expected.equals(display));
 	}
 
