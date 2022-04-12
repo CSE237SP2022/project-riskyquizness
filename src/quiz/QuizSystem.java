@@ -144,6 +144,10 @@ public class QuizSystem {
 			createQuiz(reader);
 		}
 		else if (user_selection.toLowerCase().equals("take")) {
+			if (this.quizzes.size() == 0) {
+				System.out.println("No quizzes available.");
+				return;
+			}
 			displayQuizzes();
 			int quiz_num = Integer.parseInt(questionAndReadInput("Which quiz would you like to take? Please input the number.", reader, Types.INT));
 			takeQuizSelection(quiz_num, reader);
