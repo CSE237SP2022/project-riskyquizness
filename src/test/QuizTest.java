@@ -414,7 +414,7 @@ class QuizTest {
 		
 		assertEquals(expected_output, display);
 	}
-	
+  
 	@Test
 	void userNameAskingValid() {
 		Quiz quiz = new Quiz();	
