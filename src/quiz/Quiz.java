@@ -2,6 +2,8 @@ package quiz;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import quiz.QuizSystem.Types;
 
@@ -111,7 +113,7 @@ public class Quiz {
 		
 		for (int i=0; i<questions.size(); i++) {
 			// Here, the user will input
-			String userAnswer = QuizSystem.questionAndReadInput(questions.get(i).toString(), reader, Types.CHAR, questions.get(i).getNumPossibleAnswers());
+			String userAnswer = QuizSystem.questionAndReadInputTaking(questions.get(i).toString(), reader, Types.CHAR, questions.get(i).getNumPossibleAnswers());
 			char firstChar = userAnswer.charAt(0);
 
 			// Now we have valid input
@@ -124,5 +126,4 @@ public class Quiz {
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
 	}
-	
 }

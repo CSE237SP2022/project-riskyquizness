@@ -81,7 +81,26 @@ public class QuizSystem {
 			} 
 		}
 		return response.toUpperCase();
+	}
+	
+	public static String questionAndReadInputTaking(String question, Scanner reader, Types t, int constraint) {
+		String response = "";
+		boolean validInput = false;
 
+		while (!validInput) {
+			System.out.println(question);
+			response = reader.nextLine();
+
+			if (response.toUpperCase().equals("CANCEL")) {
+				return "CANCEL";
+			}
+			else {
+				if (t == Types.CHAR) {
+					validInput = checkValidChar(response, constraint);
+				}
+			} 
+		}
+		return response.toUpperCase();
 	}
 
 	public static boolean checkValidInt(String valueToCheck) {
