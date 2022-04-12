@@ -92,6 +92,7 @@ public class QuizSystem {
 			response = reader.nextLine();
 
 			if (response.toUpperCase().equals("CANCEL")) {
+				cancelQuizTaking();
 				return "CANCEL";
 			}
 			else {
@@ -165,6 +166,11 @@ public class QuizSystem {
 
 	public static void cancelQuiz() {
 		System.out.println("\nQuiz Creation Cancelled");
+		System.out.println("____________________________");
+	}
+	
+	public static void cancelQuizTaking() {
+		System.out.println("\nQuiz Taking Cancelled");
 		System.out.println("____________________________");
 	}
 

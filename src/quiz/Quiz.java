@@ -114,6 +114,12 @@ public class Quiz {
 		for (int i=0; i<questions.size(); i++) {
 			// Here, the user will input
 			String userAnswer = QuizSystem.questionAndReadInputTaking(questions.get(i).toString(), reader, Types.CHAR, questions.get(i).getNumPossibleAnswers());
+			
+			// Quiz taking cancel
+			if (userAnswer.equals("CANCEL")) {
+				return;
+			}
+			
 			char firstChar = userAnswer.charAt(0);
 
 			// Now we have valid input
