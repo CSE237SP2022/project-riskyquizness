@@ -12,6 +12,7 @@ public class Quiz {
 	public ArrayList<Question> questions;
 	private String quiz_name;
 	private int num_questions;
+	private Map<String,Double> leaderboard = new HashMap<String,Double>();
 	
 	public Quiz() {
 		this.questions = new ArrayList<Question>();
@@ -51,6 +52,10 @@ public class Quiz {
 			return true;
 		}
 		return false;
+	}
+	
+	public Map<String,Double> getLeaderboard(){
+		return this.leaderboard;
 	}
 	
 	public void previewQuiz() {
@@ -129,7 +134,29 @@ public class Quiz {
 		}
 		
 		double percentage = (double)score/this.num_questions * 100.0;
+		storeScore(percentage, reader);
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		return;
+	}
+	
+	public void storeScore(double percentage, Scanner reader) {
+		String userName = askUserName(reader);
+		this.leaderboard.put(userName, percentage);
+	}
+	
+	public String askUserName(Scanner reader) {
+		String response = "";
+		boolean validInput = false;
+		String trim = "";
+
+		while (!validInput) {
+			System.out.println("Please enter a valid username:\n");
+			response = reader.nextLine();
+			trim = response.replaceAll(" ","");
+			if (trim.length()>0) {
+				validInput = true;
+			}
+		}
+		return trim;
 	}
 }
