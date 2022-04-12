@@ -401,4 +401,17 @@ class QuizTest {
 		
 		assertTrue(expectedOutput.equals(display));
 	}
+	
+	@Test
+	void cancel_TakingQuiz() {
+		QuizSystem quiz_system = new QuizSystem();
+		String user_input = "cancel";
+		
+		quiz_system.questionAndReadInputTaking("Favorite color?", new Scanner(user_input), Types.INT,3);
+		
+		String expected_output = "Favorite color?\n" + "\nQuiz Taking Cancelled\n____________________________";
+		String display = outputStreamCaptor.toString().trim();
+		
+		assertEquals(expected_output, display);
+	}
 }
