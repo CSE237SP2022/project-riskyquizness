@@ -90,6 +90,31 @@ class QuizTest {
 		assertEquals(expected_output, display);
 	}
 	
+	
+	@Test
+	void check_create_quiz_cancel() {
+		QuizSystem quiz_system = new QuizSystem();
+		String user_inputs = "How well do you know me?\n" 
+								+ "1\n"
+								+ "What is my favorite color?\n"
+								+ "3\n"
+								+ "Red\n"
+								+ "cancel";
+		
+		quiz_system.createQuiz(new Scanner(user_inputs));
+		
+		String expected_output = "What is the name of the quiz?\n" + 
+				"How many questions are in your quiz?\n" +
+				"Question 1\n" +
+				"How many possible answers are there?\n" +
+				"Answer Choice 1\n" + 
+				"Answer Choice 2\n" +
+				"\nQuiz Creation Cancelled\n____________________________";
+		String display = outputStreamCaptor.toString().trim();
+		
+		assertEquals(expected_output, display);
+	}
+	
 	@Test
 	void check_create_quiz_check_size() {
 		QuizSystem quiz_system = new QuizSystem();

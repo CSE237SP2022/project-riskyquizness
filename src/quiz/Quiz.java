@@ -80,7 +80,7 @@ public class Quiz {
 			
 			String num_possible_string = QuizSystem.questionAndReadInput("How many possible answers are there?", reader, Types.INT);
 			if (num_possible_string.equals("CANCEL")) {
-				break;
+				return false;
 			}
 			int num_possible = Integer.parseInt(num_possible_string);
 			
@@ -97,6 +97,9 @@ public class Quiz {
 			
 			String prompt = "What is the correct answer?\n" + current_question.possibleAnswersToString();
 			String inputted_correct_answer = QuizSystem.questionAndReadInput(prompt, reader, Types.CHAR, num_possible);
+			if (inputted_correct_answer.equals("CANCEL")) {
+				return false;
+			}
 			current_question.correct_answer = inputted_correct_answer.charAt(0);
 			
 			if (this.questions.size() == this.num_questions) {
