@@ -2,9 +2,15 @@ package quiz;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import quiz.QuizSystem.Types;
 
 
@@ -56,6 +62,10 @@ public class Quiz {
 	
 	public Map<String,Double> getLeaderboard(){
 		return this.leaderboard;
+	}
+	
+	public void setLeaderboard(Map<String,Double> leaderboard) {
+		this.leaderboard = leaderboard;
 	}
 	
 	public void previewQuiz() {
@@ -139,12 +149,36 @@ public class Quiz {
 		double percentage = (double)score/this.num_questions * 100.0;
 		storeScore(percentage, reader);
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
+		printLeaderboard();
 		return;
 	}
 	
 	public void storeScore(double percentage, Scanner reader) {
 		String userName = askUserName(reader);
 		this.leaderboard.put(userName, percentage);
+		
+		
+//		List<Map.Entry<String, Double>> list = new ArrayList<>(this.leaderboard.entrySet());
+//        list.sort(Map.Entry.comparingByValue());
+//
+//        Map<String, Double> result = new LinkedHashMap<>();
+//        for (Entry<String, Double> entry : list) {
+//        	//System.out.println("key: "+ entry.getKey()+" value: "+entry.getValue());
+//            result.put(entry.getKey(), entry.getValue());
+//        }
+//
+//        this.leaderboard = result;
+		
+		Map<String,Double> result = this.leaderboard.entrySet()
+				  .stream()
+				  .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+				  .collect(Collectors.toMap(
+						    Map.Entry::getKey, 
+						    Map.Entry::getValue, 
+						    (oldValue, newValue) -> oldValue, LinkedHashMap::new));
+		
+		this.leaderboard = result;
+		
 	}
 	
 	public String askUserName(Scanner reader) {
@@ -161,5 +195,13 @@ public class Quiz {
 			}
 		}
 		return trim;
+	}
+	
+	public void printLeaderboard() {
+		Map<String,Double> curLeaderboard = this.leaderboard;
+		
+		for (Map.Entry<String,Double> entry : curLeaderboard.entrySet()) {
+			System.out.println("Player: "+entry.getKey()+ " Score: " + entry.getValue());
+		}
 	}
 }

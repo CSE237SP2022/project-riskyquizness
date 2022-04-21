@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -308,7 +309,7 @@ class QuizTest {
 		String userInput = "B"+"\nA"+"\nchristina";
 		quiz.takeQuiz(new Scanner(userInput));
 		
-		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.";
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: christina Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
 		
 		assertTrue(expectedOutput.equals(display));
@@ -336,7 +337,7 @@ class QuizTest {
 		String userInput = "1"+"\nB"+"\nA"+"\njiwon";
 		quiz.takeQuiz(new Scanner(userInput));
 		
-		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n\n"+"Favorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.";
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n\n"+"Favorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: jiwon Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
 		
 		assertTrue(expectedOutput.equals(display));
@@ -365,7 +366,7 @@ class QuizTest {
 		String userInput = "Blue"+"\nB"+"\nA"+"\nkathy";
 		quiz.takeQuiz(new Scanner(userInput));
 		
-		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n\n"+"Favorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.";
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n\n"+"Favorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: kathy Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
 		
 		assertTrue(expectedOutput.equals(display));
@@ -393,7 +394,7 @@ class QuizTest {
 		String userInput = "Blue"+"\ngreen"+"\nB"+"\nA"+"\njiwon";
 		quiz.takeQuiz(new Scanner(userInput));
 		
-		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.";
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: jiwon Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
 		
 		assertTrue(expectedOutput.equals(display));
@@ -421,7 +422,7 @@ class QuizTest {
 		String userInput = "A"+"\nA"+"\nguen";
 		quiz.takeQuiz(new Scanner(userInput));
 		
-		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 50.0% of this quiz correct.";
+		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 50.0% of this quiz correct.\nPlayer: guen Score: 50.0";
 		String display = outputStreamCaptor.toString().trim();
 		
 		assertTrue(expectedOutput.equals(display));
@@ -479,5 +480,40 @@ class QuizTest {
 		boolean containValue = leaderboard.containsValue(100.0);
 		boolean containKey = leaderboard.containsKey("jiwon");
 		assertTrue(containValue&&containKey);
+	}
+	
+	@Test
+	void displayLeaderboard() {
+		Quiz quiz = new Quiz();
+		Map<String,Double> leaderboard = new HashMap<String,Double>();
+		leaderboard.put("guen", 100.0);
+		quiz.setLeaderboard(leaderboard);
+		quiz.printLeaderboard();
+		String expected_output = "Player: guen Score: 100.0";
+		String display = outputStreamCaptor.toString().trim();
+		
+		assertEquals(expected_output, display);
+	}
+	
+	@Test
+	void displayOrderLeaderboard() {
+		Quiz quiz = new Quiz();
+		Map<String,Double> leaderboard = new HashMap<String,Double>();
+		leaderboard.put("guen", 100.0);
+		leaderboard.put("jw", 40.0);
+		leaderboard.put("kathy", 80.0);
+		quiz.setLeaderboard(leaderboard);
+		quiz.storeScore(70.0, new Scanner("christina"));
+		quiz.printLeaderboard();
+		
+		String expected_output = "Please enter a valid username:\n"
+				+ "\n"
+				+ "Player: guen Score: 100.0\n"
+				+ "Player: kathy Score: 80.0\n"
+				+ "Player: christina Score: 70.0\n"
+				+ "Player: jw Score: 40.0";
+		String display = outputStreamCaptor.toString().trim();
+		
+		assertEquals(expected_output, display);
 	}
 }
