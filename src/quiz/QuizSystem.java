@@ -185,6 +185,7 @@ public class QuizSystem {
 		System.out.println("- If you would like to take a quiz type 'take'");
 		System.out.println("- To choose an answer choice type the corresponding letter ex. 'A'");
 		System.out.println("- To choose an a quiz to take type the corresponding number ex. '1'");
+		System.out.println("- After creating your quiz you will be shown a preview and at this point you make choose to edit your quiz by answering the prompt");
 		System.out.println("- At any point in the program if you would like to return to main prompt type 'cancel'");
 		System.out.println("Have fun quizzing!");
 		System.out.println("\n____________________________\n");
