@@ -177,12 +177,26 @@ public class QuizSystem {
 		System.out.println("\nQuiz Taking Cancelled");
 		System.out.println("____________________________");
 	}
+	
+	public void instructions() {
+		System.out.println("Welcome to Risky Quizness!");
+		System.out.println("\nUser Instructions:");
+		System.out.println("- If you would like to create a quiz type 'create'");
+		System.out.println("- If you would like to take a quiz type 'take'");
+		System.out.println("- To choose an answer choice type the corresponding letter ex. 'A'");
+		System.out.println("- To choose an a quiz to take type the corresponding number ex. '1'");
+		System.out.println("- At any point in the program if you would like to return to main prompt type 'cancel'");
+		System.out.println("Have fun quizzing!");
+		System.out.println("\n____________________________\n");
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 		Scanner reader = new Scanner(System.in);
 		QuizSystem quiz_list = new QuizSystem();
+		
+		quiz_list.instructions();
 
 		while (true) {
 			quiz_list.quizSelection(reader);
