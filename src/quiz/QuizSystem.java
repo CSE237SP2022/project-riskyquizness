@@ -8,7 +8,8 @@ public class QuizSystem {
 	public enum Types {
 		INT,
 		STRING,
-		CHAR
+		CHAR,
+		BOOL
 	}
 
 	public ArrayList<Quiz> quizzes;
@@ -35,7 +36,7 @@ public class QuizSystem {
 		}
 
 		this.quizzes.add(new_quiz);
-		this.quizzes.get(this.quizzes.size()-1).previewQuiz();
+		this.quizzes.get(this.quizzes.size()-1).previewQuiz(reader);
 
 	}
 
@@ -55,9 +56,12 @@ public class QuizSystem {
 			if (t == Types.STRING) {
 				validInput = true;
 			}
-			else if (t == Types.INT) {
+			if (t == Types.INT) {
 				validInput = checkValidInt(response);
 			} 
+			else if (t == Types.BOOL) {
+				validInput = checkValidBool(response);
+			}
 		}
 		return response;
 	}
@@ -77,6 +81,9 @@ public class QuizSystem {
 			else {
 				if (t == Types.CHAR) {
 					validInput = checkValidChar(response, constraint);
+				}
+				if (t == Types.INT) {
+					validInput = checkValidInt(response, constraint);
 				}
 			} 
 		}
@@ -118,6 +125,21 @@ public class QuizSystem {
 			return false;
 		}
 	}
+	
+	public static boolean checkValidInt(String valueToCheck, int constraint) {
+		try {
+			int value = Integer.parseInt(valueToCheck);
+			if (value == 0 || value > constraint) {
+				invalidInput();
+				return false;
+			}
+			return true;
+		}
+		catch (NumberFormatException e){
+			invalidInput();
+			return false;
+		}
+	}
 
 	public static boolean checkValidChar(String valueToCheck, int constraint) {
 		if (valueToCheck.length() != 1) {
@@ -131,6 +153,16 @@ public class QuizSystem {
 		}
 		invalidInput();
 		return false;
+	}
+	
+	public static boolean checkValidBool(String valueToCheck) {
+		if (valueToCheck.toUpperCase().equals("YES") || valueToCheck.toUpperCase().equals("NO")) {
+			return true;
+		}
+		else {
+			invalidInput();
+			return false;
+		}
 	}
 
 	public void takeQuizSelection(int quizNum, Scanner reader) {

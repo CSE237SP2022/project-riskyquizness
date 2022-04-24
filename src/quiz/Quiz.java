@@ -68,7 +68,7 @@ public class Quiz {
 		this.leaderboard = leaderboard;
 	}
 	
-	public void previewQuiz() {
+	public void previewQuiz(Scanner reader) {
 		System.out.println("\n____________________________");
 
 		System.out.println("Preview Quiz\n");
@@ -78,12 +78,36 @@ public class Quiz {
 			System.out.println(question.toString());
 		}
 		System.out.println("____________________________\n");
+		
+		editQuiz(reader);
+	}
+	
+	public void editQuiz(Scanner reader) {
+		String edit = QuizSystem.questionAndReadInput("Confirm quiz? (type 'yes' to confirm, 'no' to edit)", reader, Types.BOOL);
+		
+		if (edit.toUpperCase().equals("YES")) {
+			return;
+		}
+		else if (edit.toUpperCase().equals("NO")){
+			String add_delete = QuizSystem.questionAndReadInput("Add question (1) or delete question (2)? (type '1' or '2')", reader, Types.INT, 2);
+			if (Integer.parseInt(add_delete) == 1) {
+				addQuestion(1, reader);
+			}
+			else if (Integer.parseInt(add_delete) == 2) {
+				String question_to_del = QuizSystem.questionAndReadInput("Which question would you like to delete?", reader, Types.INT, this.questions.size());
+				int question_num = Integer.parseInt(question_to_del);
+				this.questions.remove(question_num - 1);
+				this.num_questions = this.questions.size();
+			}
+			
+			this.previewQuiz(reader);
+		}
 
 	}
 	
 	public boolean addQuestion(int num_questions, Scanner reader) {
 		for (int i = 0; i < num_questions; i++) {
-			String question = QuizSystem.questionAndReadInput("Question " + (i + 1), reader, Types.STRING);
+			String question = QuizSystem.questionAndReadInput("Question " + (this.questions.size() + 1), reader, Types.STRING);
 			if (question.equals("CANCEL")) {
 				return false;
 			}
