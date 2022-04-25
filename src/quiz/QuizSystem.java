@@ -8,29 +8,41 @@ public class QuizSystem {
 	public enum Types {
 		INT,
 		STRING,
-		CHAR
+		CHAR,
+		BOOL
 	}
 
 	public ArrayList<Quiz> quizzes;
+	private Scanner reader;
 
 	public QuizSystem() {
 		this.quizzes = new ArrayList<Quiz>();
+		this.reader = new Scanner(System.in);
+	}
+	
+	public QuizSystem(Scanner reader) {
+		this.quizzes = new ArrayList<Quiz>();
+		this.reader = reader;
 	}
 
-	public void createQuiz(Scanner reader) {
-		Quiz new_quiz = new Quiz();
+	public Scanner getReader() {
+		return reader;
+	}
 
-		String quiz_name = questionAndReadInput("What is the name of the quiz?", reader, Types.STRING);
+	public void createQuiz() {
+		Quiz new_quiz = new Quiz(this);
+
+		String quiz_name = questionAndReadInput("What is the name of the quiz?", Types.STRING);
 		if (!new_quiz.setQuizName(quiz_name)){
 			return;
 		}
 
-		String num_questions_string = questionAndReadInput("How many questions are in your quiz?", reader, Types.INT);
+		String num_questions_string = questionAndReadInput("How many questions are in your quiz?", Types.INT);
 		if (!new_quiz.setNumQuestions(num_questions_string)) {
 			return;
 		}
 
-		if (!new_quiz.addQuestion(new_quiz.getNumQuestions(), reader)) {
+		if (!new_quiz.addQuestion(new_quiz.getNumQuestions())) {
 			return;	
 		}
 
@@ -39,13 +51,13 @@ public class QuizSystem {
 
 	}
 
-	public static String questionAndReadInput(String question, Scanner reader, Types t) {
+	public String questionAndReadInput(String question, Types t) {
 		String response = "";
 		boolean validInput = false;
 		
 		while (!validInput) {
 			System.out.println(question);
-			response = reader.nextLine();
+			response = this.reader.nextLine();
 
 			if (response.toUpperCase().equals("CANCEL")) {
 				cancelQuiz();
@@ -53,22 +65,25 @@ public class QuizSystem {
 			}
 			
 			if (t == Types.STRING) {
-				validInput = true;
+				validInput = checkValidString(response);
 			}
-			else if (t == Types.INT) {
+			if (t == Types.INT) {
 				validInput = checkValidInt(response);
 			} 
+			else if (t == Types.BOOL) {
+				validInput = checkValidBool(response);
+			}
 		}
 		return response;
 	}
 
-	public static String questionAndReadInput(String question, Scanner reader, Types t, int constraint) {
+	public String questionAndReadInput(String question, Types t, int constraint) {
 		String response = "";
 		boolean validInput = false;
 
 		while (!validInput) {
 			System.out.println(question);
-			response = reader.nextLine();
+			response = this.reader.nextLine();
 
 			if (response.toUpperCase().equals("CANCEL")) {
 				cancelQuiz();
@@ -78,18 +93,21 @@ public class QuizSystem {
 				if (t == Types.CHAR) {
 					validInput = checkValidChar(response, constraint);
 				}
+				if (t == Types.INT) {
+					validInput = checkValidInt(response, constraint);
+				}
 			} 
 		}
 		return response.toUpperCase();
 	}
 	
-	public static String questionAndReadInputTaking(String question, Scanner reader, Types t, int constraint) {
+	public String questionAndReadInputTaking(String question, Types t, int constraint) {
 		String response = "";
 		boolean validInput = false;
 
 		while (!validInput) {
 			System.out.println(question);
-			response = reader.nextLine();
+			response = this.reader.nextLine();
 
 			if (response.toUpperCase().equals("CANCEL")) {
 				cancelQuizTaking();
@@ -104,10 +122,34 @@ public class QuizSystem {
 		return response.toUpperCase();
 	}
 
+	public static boolean checkValidString(String valueToCheck) {
+		if (valueToCheck.length()>0) {
+			return true;
+		}
+		else {
+			invalidInput();
+			return false;
+		}
+	}
 	public static boolean checkValidInt(String valueToCheck) {
 		try {
 			int value = Integer.parseInt(valueToCheck);
 			if (value == 0) {
+				invalidInput();
+				return false;
+			}
+			return true;
+		}
+		catch (NumberFormatException e){
+			invalidInput();
+			return false;
+		}
+	}
+	
+	public static boolean checkValidInt(String valueToCheck, int constraint) {
+		try {
+			int value = Integer.parseInt(valueToCheck);
+			if (value == 0 || value > constraint) {
 				invalidInput();
 				return false;
 			}
@@ -132,16 +174,26 @@ public class QuizSystem {
 		invalidInput();
 		return false;
 	}
-
-	public void takeQuizSelection(int quizNum, Scanner reader) {
-		this.quizzes.get(quizNum-1).takeQuiz(reader);
+	
+	public static boolean checkValidBool(String valueToCheck) {
+		if (valueToCheck.toUpperCase().equals("YES") || valueToCheck.toUpperCase().equals("NO")) {
+			return true;
+		}
+		else {
+			invalidInput();
+			return false;
+		}
 	}
 
-	public void quizSelection(Scanner reader) {
-		String user_selection  = questionAndReadInput("Would you like to create or take a quiz? (type 'create' or 'take')", reader, Types.STRING);
+	public void takeQuizSelection(int quizNum) {
+		this.quizzes.get(quizNum-1).takeQuiz();
+	}
+
+	public void quizSelection() {
+		String user_selection  = questionAndReadInput("Would you like to create or take a quiz? (type 'create' or 'take')", Types.STRING);
 
 		if (user_selection.toLowerCase().equals("create")) {
-			createQuiz(reader);
+			createQuiz();
 		}
 		else if (user_selection.toLowerCase().equals("take")) {
 			if (this.quizzes.size() == 0) {
@@ -149,8 +201,8 @@ public class QuizSystem {
 				return;
 			}
 			displayQuizzes();
-			int quiz_num = Integer.parseInt(questionAndReadInput("Which quiz would you like to take? Please input the number.", reader, Types.INT));
-			takeQuizSelection(quiz_num, reader);
+			int quiz_num = Integer.parseInt(questionAndReadInput("Which quiz would you like to take? Please input the number.", Types.INT));
+			takeQuizSelection(quiz_num);
 		}
 		else {
 			invalidInput();
@@ -194,13 +246,12 @@ public class QuizSystem {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		Scanner reader = new Scanner(System.in);
 		QuizSystem quiz_list = new QuizSystem();
 		
 		quiz_list.instructions();
 
 		while (true) {
-			quiz_list.quizSelection(reader);
+			quiz_list.quizSelection();
 		}
 
 	}

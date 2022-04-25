@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 class QuizTest {
 
 	private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
+	QuizSystem quiz_system = new QuizSystem();
 
 	@BeforeEach
 	public void setUp() {
@@ -28,7 +29,8 @@ class QuizTest {
 	
 	@Test
 	void check_set_quiz_name() {
-		Quiz quiz = new Quiz();
+		QuizSystem quiz_system = new QuizSystem();
+		Quiz quiz = new Quiz(quiz_system);
 		String quiz_name = "How well do you know me?";		
 		
 		quiz.setQuizName(quiz_name);
@@ -39,7 +41,8 @@ class QuizTest {
 
 	@Test
 	void check_set_num_questions() {
-		Quiz quiz = new Quiz();
+		QuizSystem quiz_system = new QuizSystem();
+		Quiz quiz = new Quiz(quiz_system);
 		String num_questions = "3";
 		
 		quiz.setNumQuestions(num_questions);
@@ -50,40 +53,41 @@ class QuizTest {
 	
 	@Test
 	void check_question_read_input() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_input = "How well do you know me?";
-		
-		String quiz_name = quiz_system.questionAndReadInput("What is the name of the quiz?", new Scanner(user_input), Types.STRING);
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_input));
+
+		String quiz_name = quiz_system.questionAndReadInput("What is the name of the quiz?", Types.STRING);
 		
 		assertEquals(quiz_name, user_input);
 	}
 	
 	@Test
 	void check_question_read_input_with_invalid_input() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_input = "three\n3";
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_input));
 		
-		String num_questions = quiz_system.questionAndReadInput("How many questions are in your quiz?", new Scanner(user_input), Types.INT);
+		String num_questions = quiz_system.questionAndReadInput("How many questions are in your quiz?", Types.INT);
 		
 		assertEquals(num_questions, "3");
 	}
 	
 	@Test
 	void check_question_read_input_cancel() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_input = "cancel";
-		
-		String cancel = quiz_system.questionAndReadInput("How many questions are in your quiz?", new Scanner(user_input), Types.INT);
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_input));
+
+		String cancel = quiz_system.questionAndReadInput("How many questions are in your quiz?", Types.INT);
 		
 		assertEquals(cancel, "CANCEL");
 	}
 	
 	@Test
 	void check_question_read_input_cancel_display_message() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_input = "cancel";
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_input));
+
 		
-		quiz_system.questionAndReadInput("How many questions are in your quiz?", new Scanner(user_input), Types.INT);
+		quiz_system.questionAndReadInput("How many questions are in your quiz?", Types.INT);
 		
 		String expected_output = "How many questions are in your quiz?\n" + "\nQuiz Creation Cancelled\n____________________________";
 		String display = outputStreamCaptor.toString().trim();
@@ -94,15 +98,15 @@ class QuizTest {
 	
 	@Test
 	void check_create_quiz_cancel() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_inputs = "How well do you know me?\n" 
 								+ "1\n"
 								+ "What is my favorite color?\n"
 								+ "3\n"
 								+ "Red\n"
 								+ "cancel";
-		
-		quiz_system.createQuiz(new Scanner(user_inputs));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
+
+		quiz_system.createQuiz();
 		
 		String expected_output = "What is the name of the quiz?\n" + 
 				"How many questions are in your quiz?\n" +
@@ -118,7 +122,6 @@ class QuizTest {
 	
 	@Test
 	void check_create_quiz_check_size() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_inputs = "How well do you know me? \n" 
 								+ "1\n"
 								+ "What is my favorite color?\n"
@@ -126,9 +129,11 @@ class QuizTest {
 								+ "Red\n"
 								+ "Green\n"
 								+ "Blue\n"
-								+ "C\n";
-		
-		quiz_system.createQuiz(new Scanner(user_inputs));
+								+ "C\n"
+								+ "yes";
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
+
+		quiz_system.createQuiz();
 		
 		int num_quizzes = quiz_system.quizzes.size();
 			
@@ -137,7 +142,6 @@ class QuizTest {
 	
 	@Test
 	void check_create_quiz_check_quiz_name() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_inputs = "How well do you know me?\n" 
 								+ "1\n"
 								+ "What is my favorite color?\n"
@@ -145,9 +149,12 @@ class QuizTest {
 								+ "Red\n"
 								+ "Green\n"
 								+ "Blue\n"
-								+ "C\n";
+								+ "C\n"
+								+ "yes";
 		
-		quiz_system.createQuiz(new Scanner(user_inputs));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
+
+		quiz_system.createQuiz();
 		
 		Quiz quiz = quiz_system.quizzes.get(0);
 		String quiz_name = quiz.getQuizName();
@@ -157,7 +164,6 @@ class QuizTest {
 	
 	@Test
 	void check_preview_quiz() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_inputs = "How well do you know me?\n" 
 								+ "1\n"
 								+ "What is my favorite color?\n"
@@ -165,28 +171,42 @@ class QuizTest {
 								+ "Red\n"
 								+ "Green\n"
 								+ "Blue\n"
-								+ "C\n";
+								+ "C\n"
+								+ "yes";
 		
-		quiz_system.createQuiz(new Scanner(user_inputs));
-		outputStreamCaptor.reset();
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
+
+		quiz_system.createQuiz();
+//		outputStreamCaptor.reset();
 		
-		quiz_system.quizzes.get(0).previewQuiz();
+//		quiz_system.quizzes.get(0).previewQuiz();
 		
-		String expectedOutput = "____________________________\n"
+		String expectedOutput = "What is the name of the quiz?\n"
+				+ "How many questions are in your quiz?\n"
+				+ "Question 1\n"
+				+ "How many possible answers are there?\n"
+				+ "Answer Choice 1\n"
+				+ "Answer Choice 2\n"
+				+ "Answer Choice 3\n"
+				+ "What is the correct answer?\n"
+				+ "A Red\n"
+				+ "B Green\n"
+				+ "C Blue\n"
+				+ "\n\n____________________________\n"
 				+ "Preview Quiz\n\n"
 				+ "Quiz Name: How well do you know me?\n"
 				+ "What is my favorite color?\n"
 				+ "A Red\n"
 				+ "B Green\n"
 				+ "C Blue\n\n"
-				+ "____________________________";
+				+ "____________________________\n"
+				+ "\nConfirm quiz? (type 'yes' to confirm, 'no' to edit)";
 		String display = outputStreamCaptor.toString().trim();
 		assertEquals(expectedOutput, display);
 	}
 	
 	@Test
 	void check_add_question() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_inputs = "How well do you know me?\n" 
 								+ "1\n"
 								+ "What is my favorite color?\n"
@@ -194,9 +214,12 @@ class QuizTest {
 								+ "Red\n"
 								+ "Green\n"
 								+ "Blue\n"
-								+ "C\n";
+								+ "C\n"
+								+ "yes";
 		
-		quiz_system.createQuiz(new Scanner(user_inputs));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
+
+		quiz_system.createQuiz();
 		
 		Quiz quiz = quiz_system.quizzes.get(0);
 			
@@ -204,8 +227,7 @@ class QuizTest {
 	}
 	
 	@Test
-	void check_add_question_increment_num_questions() {
-		QuizSystem quiz_system = new QuizSystem();
+	void check_edit_quiz_add_question() {
 		String user_inputs_create_quiz = "How well do you know me?\n" 
 								+ "1\n"
 								+ "What is my favorite color?\n"
@@ -213,22 +235,50 @@ class QuizTest {
 								+ "Red\n"
 								+ "Green\n"
 								+ "Blue\n"
-								+ "C\n";
+								+ "C\n"
+								+ "no\n"
+								+ "1\n"
+								+ "What is my favorite city?\n"
+								+ "4\n"
+								+ "New York City\n"
+								+ "Chicago\n"
+								+ "San Francisco\n"
+								+ "Los Angeles\n"
+								+ "A\n"
+								+ "yes";
 		
-		quiz_system.createQuiz(new Scanner(user_inputs_create_quiz));
-		
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs_create_quiz));
+
+		quiz_system.createQuiz();
 		Quiz quiz = quiz_system.quizzes.get(0);
-		String user_inputs_add_question = "What is my favorite city?\n"
-											+ "4\n"
-											+ "New York City\n"
-											+ "Chicago\n"
-											+ "San Francisco\n"
-											+ "Los Angeles\n"
-											+ "A\n";
-		
-		quiz.addQuestion(1, new Scanner(user_inputs_add_question));
-			
 		assertEquals(2, quiz.questions.size());
+	}
+	
+	@Test
+	void check_edit_quiz_delete_question() {
+		String user_inputs = "How well do you know me?\n"
+				+ "2\n" 
+				+ "What is my favorite color?\n"
+				+ "3\n"
+				+ "Red\n"
+				+ "Green\n"
+				+ "Blue\n"
+				+ "C\n"
+				+ "What is my favorite food?\n"
+				+ "2\n"
+				+ "Rice\n"
+				+ "Pizza\n"
+				+ "A\n"
+				+ "no\n"
+				+ "2\n"
+				+ "1\n"
+				+ "yes";
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
+
+		quiz_system.createQuiz();
+		Quiz quiz = quiz_system.quizzes.get(0);
+		assertEquals(1, quiz.questions.size());
+				
 	}
 	
 	@Test
@@ -304,10 +354,13 @@ class QuizTest {
 		questions.add(question2);
 		String quiz_name = "TestQuiz";
 		int num_questions = 2;
-		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
+		
 		
 		String userInput = "B"+"\nA"+"\nchristina";
-		quiz.takeQuiz(new Scanner(userInput));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(userInput));
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions, quiz_system);
+		
+		quiz.takeQuiz();
 		
 		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: christina Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
@@ -332,10 +385,12 @@ class QuizTest {
 		questions.add(question2);
 		String quiz_name = "TestQuiz";
 		int num_questions = 2;
-		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
 		
 		String userInput = "1"+"\nB"+"\nA"+"\njiwon";
-		quiz.takeQuiz(new Scanner(userInput));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(userInput));
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions, quiz_system);
+	
+		quiz.takeQuiz();
 		
 		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n\n"+"Favorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: jiwon Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
@@ -361,10 +416,12 @@ class QuizTest {
 		questions.add(question2);
 		String quiz_name = "TestQuiz";
 		int num_questions = 2;
-		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
-		
+
 		String userInput = "Blue"+"\nB"+"\nA"+"\nkathy";
-		quiz.takeQuiz(new Scanner(userInput));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(userInput));
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions, quiz_system);
+		
+		quiz.takeQuiz();
 		
 		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n\n"+"Favorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: kathy Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
@@ -389,10 +446,12 @@ class QuizTest {
 		questions.add(question2);
 		String quiz_name = "TestQuiz";
 		int num_questions = 2;
-		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
 		
 		String userInput = "Blue"+"\ngreen"+"\nB"+"\nA"+"\njiwon";
-		quiz.takeQuiz(new Scanner(userInput));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(userInput));
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions, quiz_system);
+		
+		quiz.takeQuiz();
 		
 		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n"+"\nInvalid input. Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 100.0% of this quiz correct.\nPlayer: jiwon Score: 100.0";
 		String display = outputStreamCaptor.toString().trim();
@@ -417,10 +476,12 @@ class QuizTest {
 		questions.add(question2);
 		String quiz_name = "TestQuiz";
 		int num_questions = 2;
-		Quiz quiz = new Quiz(questions, quiz_name, num_questions);
-		
+
 		String userInput = "A"+"\nA"+"\nguen";
-		quiz.takeQuiz(new Scanner(userInput));
+		QuizSystem quiz_system = new QuizSystem(new Scanner(userInput));
+		Quiz quiz = new Quiz(questions, quiz_name, num_questions, quiz_system);
+		
+		quiz.takeQuiz();
 		
 		String expectedOutput = "Favorite color?\nA blue\nB green\nC red\n"+"\nFavorite food?\nA orange\nB rice\nC bread\n\nPlease enter a valid username:\n\nYou got 50.0% of this quiz correct.\nPlayer: guen Score: 50.0";
 		String display = outputStreamCaptor.toString().trim();
@@ -430,10 +491,11 @@ class QuizTest {
 	
 	@Test
 	void cancel_TakingQuiz() {
-		QuizSystem quiz_system = new QuizSystem();
 		String user_input = "cancel";
+		QuizSystem quiz_system = new QuizSystem(new Scanner(user_input));
+
 		
-		quiz_system.questionAndReadInputTaking("Favorite color?", new Scanner(user_input), Types.INT,3);
+		quiz_system.questionAndReadInputTaking("Favorite color?", Types.INT,3);
 		
 		String expected_output = "Favorite color?\n" + "\nQuiz Taking Cancelled\n____________________________";
 		String display = outputStreamCaptor.toString().trim();
@@ -443,22 +505,27 @@ class QuizTest {
   
 	@Test
 	void userNameAskingValid() {
-		Quiz quiz = new Quiz();	
-		String userName = quiz.askUserName(new Scanner("jiwon"));
+		QuizSystem quiz_system = new QuizSystem(new Scanner("jiwon"));
+		Quiz quiz = new Quiz(quiz_system);	
+		String userName = quiz.askUserName();
 		assertTrue("jiwon".equals(userName));
 	}
 	
 	@Test
 	void userNameAskingInvalid() {
-		Quiz quiz = new Quiz();	
-		String userName = quiz.askUserName(new Scanner("   "+"\nguen"));
+		QuizSystem quiz_system = new QuizSystem(new Scanner("   "+"\nguen"));
+		Quiz quiz = new Quiz(quiz_system);	
+	
+		String userName = quiz.askUserName();
 		assertTrue("guen".equals(userName));
 	}
 	
 	@Test
 	void userNameAskingPrompt() {
-		Quiz quiz = new Quiz();	
-		String userName = quiz.askUserName(new Scanner("   "+"\nguen"));
+		QuizSystem quiz_system = new QuizSystem(new Scanner("   "+"\nguen"));
+		Quiz quiz = new Quiz(quiz_system);	
+	
+		String userName = quiz.askUserName();
 		String expected_output = "Please enter a valid username:\n\n"+"Please enter a valid username:";
 		String display = outputStreamCaptor.toString().trim();
 		
@@ -467,15 +534,19 @@ class QuizTest {
 	
 	@Test
 	void getEmptyLeaderBoard() {
-		Quiz quiz = new Quiz();
+		QuizSystem quiz_system = new QuizSystem();
+		Quiz quiz = new Quiz(quiz_system);	
+	
 		Map<String,Double> leaderboard = quiz.getLeaderboard();
 		assertTrue(leaderboard.isEmpty());
 	}
 	
 	@Test
 	void storeScoreLeaderboard() {
-		Quiz quiz = new Quiz();
-		quiz.storeScore(100.0,new Scanner("jiwon"));
+		QuizSystem quiz_system = new QuizSystem(new Scanner("jiwon"));
+		Quiz quiz = new Quiz(quiz_system);	
+	
+		quiz.storeScore(100.0);
 		Map<String,Double> leaderboard = quiz.getLeaderboard();
 		boolean containValue = leaderboard.containsValue(100.0);
 		boolean containKey = leaderboard.containsKey("jiwon");
@@ -484,7 +555,9 @@ class QuizTest {
 	
 	@Test
 	void displayLeaderboard() {
-		Quiz quiz = new Quiz();
+		QuizSystem quiz_system = new QuizSystem();
+		Quiz quiz = new Quiz(quiz_system);
+		
 		Map<String,Double> leaderboard = new HashMap<String,Double>();
 		leaderboard.put("guen", 100.0);
 		quiz.setLeaderboard(leaderboard);
@@ -497,13 +570,14 @@ class QuizTest {
 	
 	@Test
 	void displayOrderLeaderboard() {
-		Quiz quiz = new Quiz();
+		QuizSystem quiz_system = new QuizSystem(new Scanner("christina"));
+		Quiz quiz = new Quiz(quiz_system);
 		Map<String,Double> leaderboard = new HashMap<String,Double>();
 		leaderboard.put("guen", 100.0);
 		leaderboard.put("jw", 40.0);
 		leaderboard.put("kathy", 80.0);
 		quiz.setLeaderboard(leaderboard);
-		quiz.storeScore(70.0, new Scanner("christina"));
+		quiz.storeScore(70.0);
 		quiz.printLeaderboard();
 		
 		String expected_output = "Please enter a valid username:\n"
