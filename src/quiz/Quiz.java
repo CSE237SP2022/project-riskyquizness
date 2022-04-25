@@ -28,10 +28,11 @@ public class Quiz {
 		this.quiz_system = quiz_system;
 	}
 	
-	public Quiz(ArrayList<Question> questions, String quiz_name, int num_questions) {
+	public Quiz(ArrayList<Question> questions, String quiz_name, int num_questions, QuizSystem quiz_system) {
 		this.questions = questions;
 		this.quiz_name = quiz_name;
 		this.num_questions = num_questions;
+		this.quiz_system = quiz_system;
 	}
 	
 	public ArrayList<Question> getQuestions() {
@@ -85,7 +86,6 @@ public class Quiz {
 	}
 	
 	public void editQuiz() {
-		System.out.println("here");
 		
 		String edit = quiz_system.questionAndReadInput("Confirm quiz? (type 'yes' to confirm, 'no' to edit)", Types.BOOL);
 		
