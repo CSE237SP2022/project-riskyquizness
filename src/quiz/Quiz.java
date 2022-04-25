@@ -19,11 +19,13 @@ public class Quiz {
 	private String quiz_name;
 	private int num_questions;
 	private Map<String,Double> leaderboard = new HashMap<String,Double>();
+	private QuizSystem quiz_system;
 	
-	public Quiz() {
+	public Quiz(QuizSystem quiz_system) {
 		this.questions = new ArrayList<Question>();
 		this.quiz_name = "";
 		this.num_questions = 0;
+		this.quiz_system = quiz_system;
 	}
 	
 	public Quiz(ArrayList<Question> questions, String quiz_name, int num_questions) {
@@ -68,7 +70,7 @@ public class Quiz {
 		this.leaderboard = leaderboard;
 	}
 	
-	public void previewQuiz(Scanner reader) {
+	public void previewQuiz() {
 		System.out.println("\n____________________________");
 
 		System.out.println("Preview Quiz\n");
@@ -79,40 +81,42 @@ public class Quiz {
 		}
 		System.out.println("____________________________\n");
 		
-		editQuiz(reader);
+		editQuiz();
 	}
 	
-	public void editQuiz(Scanner reader) {
-		String edit = QuizSystem.questionAndReadInput("Confirm quiz? (type 'yes' to confirm, 'no' to edit)", reader, Types.BOOL);
+	public void editQuiz() {
+		System.out.println("here");
+		
+		String edit = quiz_system.questionAndReadInput("Confirm quiz? (type 'yes' to confirm, 'no' to edit)", Types.BOOL);
 		
 		if (edit.toUpperCase().equals("YES")) {
 			return;
 		}
 		else if (edit.toUpperCase().equals("NO")){
-			String add_delete = QuizSystem.questionAndReadInput("Add question (1) or delete question (2)? (type '1' or '2')", reader, Types.INT, 2);
+			String add_delete = quiz_system.questionAndReadInput("Add question (1) or delete question (2)? (type '1' or '2')", Types.INT, 2);
 			if (Integer.parseInt(add_delete) == 1) {
-				addQuestion(1, reader);
+				addQuestion(1);
 			}
 			else if (Integer.parseInt(add_delete) == 2) {
-				String question_to_del = QuizSystem.questionAndReadInput("Which question would you like to delete?", reader, Types.INT, this.questions.size());
+				String question_to_del = quiz_system.questionAndReadInput("Which question would you like to delete?", Types.INT, this.questions.size());
 				int question_num = Integer.parseInt(question_to_del);
 				this.questions.remove(question_num - 1);
 				this.num_questions = this.questions.size();
 			}
 			
-			this.previewQuiz(reader);
+			this.previewQuiz();
 		}
 
 	}
 	
-	public boolean addQuestion(int num_questions, Scanner reader) {
+	public boolean addQuestion(int num_questions) {
 		for (int i = 0; i < num_questions; i++) {
-			String question = QuizSystem.questionAndReadInput("Question " + (this.questions.size() + 1), reader, Types.STRING);
+			String question = quiz_system.questionAndReadInput("Question " + (this.questions.size() + 1), Types.STRING);
 			if (question.equals("CANCEL")) {
 				return false;
 			}
 			
-			String num_possible_string = QuizSystem.questionAndReadInput("How many possible answers are there?", reader, Types.INT);
+			String num_possible_string = quiz_system.questionAndReadInput("How many possible answers are there?", Types.INT);
 			if (num_possible_string.equals("CANCEL")) {
 				return false;
 			}
@@ -120,7 +124,7 @@ public class Quiz {
 			
 			String[] possible_answers = new String[num_possible];
 			for (int j = 0; j < num_possible; j++) {
-				String answer_choice = QuizSystem.questionAndReadInput("Answer Choice " + (j + 1), reader, Types.STRING);
+				String answer_choice = quiz_system.questionAndReadInput("Answer Choice " + (j + 1), Types.STRING);
 				if (answer_choice.equals("CANCEL")) {
 					return false;
 				}
@@ -130,7 +134,7 @@ public class Quiz {
 			Question current_question = new Question(question, possible_answers);
 			
 			String prompt = "What is the correct answer?\n" + current_question.possibleAnswersToString();
-			String inputted_correct_answer = QuizSystem.questionAndReadInput(prompt, reader, Types.CHAR, num_possible);
+			String inputted_correct_answer = quiz_system.questionAndReadInput(prompt, Types.CHAR, num_possible);
 			if (inputted_correct_answer.equals("CANCEL")) {
 				return false;
 			}
@@ -150,12 +154,12 @@ public class Quiz {
         return str != null && str.matches("[-+]?\\d*\\.?\\d+");
     }
 	
-	public void takeQuiz(Scanner reader) {
+	public void takeQuiz() {
 		int score = 0;
 		
 		for (int i=0; i<questions.size(); i++) {
 			// Here, the user will input
-			String userAnswer = QuizSystem.questionAndReadInputTaking(questions.get(i).toString(), reader, Types.CHAR, questions.get(i).getNumPossibleAnswers());
+			String userAnswer = quiz_system.questionAndReadInputTaking(questions.get(i).toString(), Types.CHAR, questions.get(i).getNumPossibleAnswers());
 			
 			// Quiz taking cancel
 			if (userAnswer.equals("CANCEL")) {
@@ -171,14 +175,14 @@ public class Quiz {
 		}
 		
 		double percentage = (double)score/this.num_questions * 100.0;
-		storeScore(percentage, reader);
+		storeScore(percentage);
 		System.out.println("You got "+ percentage + "% of this quiz correct.");
 		printLeaderboard();
 		return;
 	}
 	
-	public void storeScore(double percentage, Scanner reader) {
-		String userName = askUserName(reader);
+	public void storeScore(double percentage) {
+		String userName = askUserName();
 		this.leaderboard.put(userName, percentage);
 		
 		
@@ -205,14 +209,14 @@ public class Quiz {
 		
 	}
 	
-	public String askUserName(Scanner reader) {
+	public String askUserName() {
 		String response = "";
 		boolean validInput = false;
 		String trim = "";
 
 		while (!validInput) {
 			System.out.println("Please enter a valid username:\n");
-			response = reader.nextLine();
+			response = quiz_system.getReader().nextLine();
 			trim = response.replaceAll(" ","");
 			if (trim.length()>0) {
 				validInput = true;
