@@ -1,3 +1,18 @@
+# Risky Quizness Iteration 3
+by Christina Cai, Guenevere Chang, Jiwon Choi, and Katherine Zhou
+
+## What user stories were completed this iteration?
+We completed a leaderboard function that saves user scores for each given quiz taken, an edit function for users to edit during the quiz creation process, and added javadocs for smoother navigation through the code base. We continued to create as many tests as possible and practiced code cleanliness guidelines. 
+We completed issues #25 and #42, on our Github project management board, which reflect a more detailed description of our work.
+
+## Is there anything that you implemented but doesn't currently work?
+No.
+
+## What commands are needed to compile and run your code from the command line (or better yet, provide a script that people can use to run your program!)
+A bash script is provided. Run ./script.sh
+
+///////////////////////////
+
 # Risky Quizness Iteration 2
 by Christina Cai, Guenevere Chang, Jiwon Choi, and Katherine Zhou
 
