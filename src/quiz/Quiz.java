@@ -12,7 +12,11 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import quiz.QuizSystem.Types;
-
+/**
+ * A class representing a Quiz with the questions, quiz name, and its leader board
+ * @author Christina Cai, Guenevere Chang, Jiwon Choi, Katherine Zhou
+ *
+ */
 
 public class Quiz {
 	public ArrayList<Question> questions;
@@ -71,6 +75,9 @@ public class Quiz {
 		this.leaderboard = leaderboard;
 	}
 	
+	/**
+	 * A method to preview the created quiz and displays all of its questions and possible answers
+	 */
 	public void previewQuiz() {
 		System.out.println("\n____________________________");
 
@@ -85,6 +92,9 @@ public class Quiz {
 		editQuiz();
 	}
 	
+	/**
+	 * A method that allows users to edit a created quiz during the preview quiz process. Users are able to add or delete questions.
+	 */
 	public void editQuiz() {
 		
 		String edit = quiz_system.questionAndReadInput("Confirm quiz? (type 'yes' to confirm, 'no' to edit)", Types.BOOL);
@@ -109,6 +119,11 @@ public class Quiz {
 
 	}
 	
+	/**
+	 * A method that adds a question to the quiz
+	 * @param num_questions int object with the number of questions to add
+	 * @return boolean indicated whether or not the question was sucessfully added
+	 */
 	public boolean addQuestion(int num_questions) {
 		for (int i = 0; i < num_questions; i++) {
 			String question = quiz_system.questionAndReadInput("Question " + (this.questions.size() + 1), Types.STRING);
@@ -149,11 +164,13 @@ public class Quiz {
 		return true;
 	}
 	
-	
 	public static boolean isNumeric(String str) {
         return str != null && str.matches("[-+]?\\d*\\.?\\d+");
     }
 	
+	/**
+	 * A method for taking the quiz. Users will be shown the quiz questions and give answers. The score is calculated and printed out to the console.
+	 */
 	public void takeQuiz() {
 		int score = 0;
 		
@@ -181,21 +198,13 @@ public class Quiz {
 		return;
 	}
 	
+	/**
+	 * A method to store the score for the leader board.
+	 * @param percentage double variable containing the score that the user got
+	 */
 	public void storeScore(double percentage) {
 		String userName = askUserName();
 		this.leaderboard.put(userName, percentage);
-		
-		
-//		List<Map.Entry<String, Double>> list = new ArrayList<>(this.leaderboard.entrySet());
-//        list.sort(Map.Entry.comparingByValue());
-//
-//        Map<String, Double> result = new LinkedHashMap<>();
-//        for (Entry<String, Double> entry : list) {
-//        	//System.out.println("key: "+ entry.getKey()+" value: "+entry.getValue());
-//            result.put(entry.getKey(), entry.getValue());
-//        }
-//
-//        this.leaderboard = result;
 		
 		Map<String,Double> result = this.leaderboard.entrySet()
 				  .stream()
@@ -209,6 +218,10 @@ public class Quiz {
 		
 	}
 	
+	/**
+	 * A method that prompts the user to enter a user name
+	 * @return String with the valid user name
+	 */
 	public String askUserName() {
 		String response = "";
 		boolean validInput = false;
@@ -225,6 +238,9 @@ public class Quiz {
 		return trim;
 	}
 	
+	/**
+	 * A method that prints out the leader board after a user has completed taking a quiz 
+	 */
 	public void printLeaderboard() {
 		Map<String,Double> curLeaderboard = this.leaderboard;
 		
