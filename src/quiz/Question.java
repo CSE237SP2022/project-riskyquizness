@@ -1,5 +1,9 @@
 package quiz;
-
+/**
+ * A class representing a multiple choice Question which contains the question, the possible answers, and the correct answer 
+ * @author Christina Cai, Guenevere Chang, Jiwon Choi, Katherine Zhou
+ *
+ */
 public class Question {
 	
 	private String question;
@@ -23,7 +27,6 @@ public class Question {
 	public String get_question() {
 		return this.question;
 	}
-	
 
 	public String[] get_possible_answers() {
 		return this.possible_answers;

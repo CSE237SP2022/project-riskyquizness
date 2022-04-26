@@ -177,9 +177,6 @@ class QuizTest {
 		QuizSystem quiz_system = new QuizSystem(new Scanner(user_inputs));
 
 		quiz_system.createQuiz();
-//		outputStreamCaptor.reset();
-		
-//		quiz_system.quizzes.get(0).previewQuiz();
 		
 		String expectedOutput = "What is the name of the quiz?\n"
 				+ "How many questions are in your quiz?\n"

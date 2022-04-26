@@ -3,6 +3,11 @@ package quiz;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * A class that represents the Quiz management system that runs the entire program
+ * @author Christina Cai, Guenevere Chang, Jiwon Choi, Katherine Zhou
+ *
+ */
 public class QuizSystem {
 
 	public enum Types {
@@ -29,6 +34,9 @@ public class QuizSystem {
 		return reader;
 	}
 
+	/**
+	 * A method that allows users to create a quiz. Guides users through the creation process in the command line.
+	 */
 	public void createQuiz() {
 		Quiz new_quiz = new Quiz(this);
 
@@ -50,7 +58,13 @@ public class QuizSystem {
 		this.quizzes.get(this.quizzes.size()-1).previewQuiz();
 
 	}
-
+	
+	/**
+	 * A method that displays the question, and reads in the input. If the input is invalid it will repeatedly ask the question.
+	 * @param question String variable with the question
+	 * @param t the expected type of the user input
+	 * @return the user response if the input is valid
+	 */
 	public String questionAndReadInput(String question, Types t) {
 		String response = "";
 		boolean validInput = false;
@@ -76,7 +90,14 @@ public class QuizSystem {
 		}
 		return response;
 	}
-
+	
+	/**
+	 * A method that displays the question, and reads in the input. If the input is invalid it will repeatedly ask the question.
+	 * @param question String variable with the question
+	 * @param t the expected type of the user input
+	 * @param constraint int variable containing the constraint on the input
+	 * @return the user response if the input is valid
+	 */
 	public String questionAndReadInput(String question, Types t, int constraint) {
 		String response = "";
 		boolean validInput = false;
@@ -101,6 +122,13 @@ public class QuizSystem {
 		return response.toUpperCase();
 	}
 	
+	/**
+	 * A method that displays the question, and reads in the input. If the input is invalid it will repeatedly ask the question.
+	 * @param question String variable with the question
+	 * @param t the expected type of the user input
+	 * @param constraint int variable containing the constraint on the input
+	 * @return the user response if the input is valid
+	 */
 	public String questionAndReadInputTaking(String question, Types t, int constraint) {
 		String response = "";
 		boolean validInput = false;
@@ -185,10 +213,17 @@ public class QuizSystem {
 		}
 	}
 
+	/**
+	 * A method that calls the takeQuiz function for the choosen quiz
+	 * @param quizNum
+	 */
 	public void takeQuizSelection(int quizNum) {
 		this.quizzes.get(quizNum-1).takeQuiz();
 	}
 
+	/**
+	 * A method that prompts the user to select whether or not they want to create or take a quiz, and prompts the corresponding methods
+	 */
 	public void quizSelection() {
 		String user_selection  = questionAndReadInput("Would you like to create or take a quiz? (type 'create' or 'take')", Types.STRING);
 
@@ -244,8 +279,6 @@ public class QuizSystem {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
 		QuizSystem quiz_list = new QuizSystem();
 		
 		quiz_list.instructions();
